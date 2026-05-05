@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg" (click)="startMusic()">
+  <div class="container-fluid">
+    <a class="navbar-brand">Mythology Slots</a>
+    <div class="navbar-center">
+      <span class="made-by">Made by Komodi Brendon</span>
+    </div>
+    <div class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
+        <ng-container *ngIf="isLoggedIn()">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/slot">Slot</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" (click)="logout()">Logout</a>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="!isLoggedIn()">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/register">Register</a>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+</nav>

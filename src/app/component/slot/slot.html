@@ -1,0 +1,237 @@
+<div class="slot-fullscreen">
+  <video *ngIf="isFreeSpinMode"
+         class="freespin-background-video"
+         src="assets/videos/freespinvideo1.mp4"
+         autoplay loop playsinline
+         [muted]="true"
+         (canplay)="onFreeSpinVideoLoaded($event)">
+  </video>
+
+  <div *ngIf="message" class="slot-message-top">{{ message }}</div>
+
+  <div *ngIf="isFreeSpinMode" class="free-spin-counter">
+    FREE SPINS: {{ freeSpinsRemaining }}
+  </div>
+
+  <div *ngIf="showFreeSpinIntro" class="freespin-overlay">
+    <video class="freespin-video"
+           src="assets/videos/freespin (2).mp4"
+           autoplay loop playsinline muted>
+    </video>
+    <div class="freespin-overlay-content">
+      <div class="freespin-title">FREE SPINS!</div>
+      <div class="freespin-count">{{ pendingFreeSpins }} SPINS</div>
+      <button class="freespin-continue-btn" (click)="dismissFreeSpinIntro()">CONTINUE</button>
+    </div>
+  </div>
+
+  <div *ngIf="showBigWin" class="big-win-display">
+    <div class="big-win-label">BIG WIN</div>
+    <div class="big-win-amount" [style.font-size]="getBigWinFontSize()">{{ bigWinAmount }}</div>
+  </div>
+
+  <div *ngIf="showMegaWin" class="big-win-display">
+    <div class="big-win-label mega-win-label">MEGA WIN</div>
+    <div class="big-win-amount mega-win-amount" [style.font-size]="getBigWinFontSize()">{{ megaWinAmount }}</div>
+  </div>
+
+  <div *ngIf="showEpicWin" class="big-win-display">
+    <div class="big-win-label epic-win-label">EPIC WIN</div>
+    <div class="big-win-amount epic-win-amount" [style.font-size]="getBigWinFontSize()">{{ epicWinAmount }}</div>
+  </div>
+
+  <div *ngIf="showFreeSpinTotal" class="freespin-overlay">
+    <video class="freespin-video"
+           src="assets/videos/freespin.mp4"
+           autoplay loop playsinline
+           [muted]="true">
+    </video>
+    <div class="freespin-overlay-content">
+      <div class="freespin-title">FREE SPIN WIN!</div>
+      <div class="freespin-count">{{ freeSpinTotalDisplay }}</div>
+      <button class="freespin-continue-btn" (click)="dismissFreeSpinTotal()">CONTINUE</button>
+    </div>
+  </div>
+
+  <div class="slot-layout"
+       [class.freespin-active]="isFreeSpinMode"
+       [style.margin-left]="isFreeSpinMode ? '60px' : '0'"
+       [style.margin-top]="isFreeSpinMode ? '240px' : '200px'">
+
+    <div class="paytable-panel paytable-left"
+         [style.visibility]="isFreeSpinMode ? 'hidden' : 'visible'">
+      <div class="pay-item" *ngFor="let item of paytableLeft">
+        <img [src]="item.image" alt="{{ item.name }}">
+        <div class="pay-info">
+          <div class="pay-name">{{ item.name }}</div>
+          <div class="pay-mult">{{ item.multiplier }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot-main"
+         [style.transform]="isFreeSpinMode ? 'scale(1.1)' : 'scale(1)'">
+      <div class="slot-machine-wrapper">
+        <div class="slot-grid">
+
+          <div class="slot-col-wrapper"
+               *ngFor="let col of [0,1,2,3,4]; let j = index"
+               [class.flash]="lightningCols[j]"
+               [class.expanding]="expandingCols.includes(j) && !isSpinning">
+
+            <div class="expanding-symbol" *ngIf="expandingCols.includes(j) && !isSpinning">
+              <div class="expanding-lightning">
+                <div class="exp-bolt exp-bolt-1"></div>
+                <div class="exp-bolt exp-bolt-2"></div>
+                <div class="exp-bolt exp-bolt-3"></div>
+                <div class="exp-bolt exp-bolt-4"></div>
+              </div>
+              <video *ngIf="getExpandingVideo(j)"
+                     [src]="getExpandingVideo(j)"
+                     autoplay loop playsinline
+                     [muted]="showFreeSpinTotal">
+              </video>
+              <img *ngIf="!getExpandingVideo(j)"
+                   [src]="getExpandingImage(j)"
+                   alt="expanding">
+            </div>
+
+            <div class="lightning-strike" [class.active]="lightningCols[j]"></div>
+
+            <ng-container *ngFor="let rowIdx of [0,1,2,3,4]">
+              <div *ngIf="isStickyWild(rowIdx, j) && !expandingCols.includes(j)"
+                   class="sticky-wild-fixed"
+                   [style.top.px]="rowIdx * 142">
+                <div class="symbol-card symbol-WILD sticky-wild-glow">WILD</div>
+              </div>
+            </ng-container>
+
+            <div class="slot-strip"
+                 [class.spinning]="spinningCols[j]"
+                 [class.stopping]="stoppingCols[j]">
+
+              <ng-container *ngFor="let row of spinningGrid; let rowIdx = index">
+                <div class="slot-cell"
+                     [class.winning-cell]="isWinningCell(rowIdx, j) && !isSpinning"
+                     [class.chain-active]="isChainActive(rowIdx, j) && !isSpinning">
+                  <ng-container *ngIf="!isStickyWild(rowIdx, j)">
+                    <div *ngIf="isSymbol(row[j])" class="symbol-card"
+                         [ngClass]="getSymbolClass(row[j])"
+                         [class.winning-symbol]="isWinningCell(rowIdx, j) && !isSpinning">
+                      {{ getSymbolLetter(row[j]) }}
+                    </div>
+                    <div *ngIf="!isSymbol(row[j])">
+                      <img [src]="row[j]" alt="card"
+                           [class.scatter-img]="isScatterImage(row[j])"
+                           [class.scatter-animate]="isScatterImage(row[j]) && isActiveScatter(rowIdx, j) && scatterAnimating">
+                    </div>
+                  </ng-container>
+                </div>
+              </ng-container>
+
+              <ng-container *ngFor="let row of spinningGrid; let rowIdx = index">
+                <div class="slot-cell">
+                  <ng-container *ngIf="!isStickyWild(rowIdx, j)">
+                    <div *ngIf="isSymbol(row[j])" class="symbol-card" [ngClass]="getSymbolClass(row[j])">
+                      {{ getSymbolLetter(row[j]) }}
+                    </div>
+                    <div *ngIf="!isSymbol(row[j])">
+                      <img [src]="row[j]" alt="card"
+                           [class.scatter-img]="isScatterImage(row[j])">
+                    </div>
+                  </ng-container>
+                </div>
+              </ng-container>
+
+              <ng-container *ngFor="let row of spinningGrid; let rowIdx = index">
+                <div class="slot-cell">
+                  <ng-container *ngIf="!isStickyWild(rowIdx, j)">
+                    <div *ngIf="isSymbol(row[j])" class="symbol-card" [ngClass]="getSymbolClass(row[j])">
+                      {{ getSymbolLetter(row[j]) }}
+                    </div>
+                    <div *ngIf="!isSymbol(row[j])">
+                      <img [src]="row[j]" alt="card"
+                           [class.scatter-img]="isScatterImage(row[j])">
+                    </div>
+                  </ng-container>
+                </div>
+              </ng-container>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="paytable-panel paytable-right"
+         [style.visibility]="isFreeSpinMode ? 'hidden' : 'visible'">
+      <div class="pay-item" *ngFor="let item of paytableRight">
+        <div class="pay-info">
+          <div class="pay-name">{{ item.name }}</div>
+          <div class="pay-mult">{{ item.multiplier }}</div>
+        </div>
+        <img [src]="item.image" alt="{{ item.name }}">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slot-controls">
+    <div class="control-block">
+      <div class="control-label">EGYENLEG</div>
+      <div class="control-value">{{ coinBalance }}</div>
+    </div>
+    <div class="control-block">
+      <div class="control-label">TÉT</div>
+      <div class="control-value">
+        <button *ngFor="let option of betOptions"
+                class="btn btn-sm ms-1"
+                [class.btn-warning]="bet === option"
+                [class.btn-outline-warning]="bet !== option"
+                (click)="bet = option"
+                [disabled]="isSpinning || fastSpinning">
+          {{ option }}
+        </button>
+      </div>
+    </div>
+    <div class="control-block" style="position: relative;">
+      <div class="control-label">FAST</div>
+      <button class="btn btn-sm"
+              [class.btn-danger]="fastSpinning"
+              [class.btn-outline-warning]="!fastSpinning"
+              (click)="toggleFastSpinMenu()"
+              [disabled]="isSpinning && !fastSpinning">
+        {{ fastSpinning ? '⏹ ' + fastSpinCount : 'FAST' }}
+      </button>
+      <div *ngIf="showFastSpinMenu" class="fast-spin-menu">
+        <button *ngFor="let option of fastSpinOptions"
+                class="btn btn-sm btn-warning d-block w-100 mb-1"
+                (click)="selectFastSpin(option)">
+          {{ option }}x
+        </button>
+      </div>
+    </div>
+    <div class="control-block spin-block">
+      <button class="spin-btn" (click)="manualSpin()" [disabled]="isSpinning && !fastSpinning">
+        {{ isSpinning ? '' : fastSpinning ? '' : 'SPIN' }}
+      </button>
+    </div>
+    <div class="control-block">
+      <div class="control-label">NYEREMÉNY</div>
+      <div class="control-value">{{ coinWon }}</div>
+    </div>
+    <div class="control-block">
+      <button class="btn btn-success btn-sm" (click)="claimDaily()" [disabled]="isSpinning">
+        Daily
+      </button>
+    </div>
+    <div class="control-block">
+      <div class="control-label">ZENE</div>
+      <button class="btn btn-sm btn-outline-warning" (click)="toggleMusic()">
+        {{ musicPlaying ? '🔇' : '🔊' }}
+      </button>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,18 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-title">⚔️ Enter the Realm</h2>
+    <div *ngIf="errorMessage" class="alert alert-info">{{ errorMessage }}</div>
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      <input type="text" class="form-control" [(ngModel)]="username">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input type="password" class="form-control" [(ngModel)]="password">
+    </div>
+    <button class="btn btn-warning w-100 mt-2" (click)="login()">🗡️ Enter</button>
+    <div class="auth-link">
+      No account? <a routerLink="/register">Join the realm</a>
+    </div>
+  </div>
+</div>

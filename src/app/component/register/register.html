@@ -1,0 +1,19 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-title">📜 Join the Realm</h2>
+    <div *ngIf="errorMessage" class="alert alert-info">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      <input type="text" class="form-control" [(ngModel)]="username">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input type="password" class="form-control" [(ngModel)]="password">
+    </div>
+    <button class="btn btn-warning w-100 mt-2" (click)="register()">✨ Create Account</button>
+    <div class="auth-link">
+      Already a member? <a routerLink="/login">Enter the realm</a>
+    </div>
+  </div>
+</div>

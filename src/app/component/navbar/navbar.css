@@ -1,0 +1,53 @@
+.navbar {
+  background: linear-gradient(90deg, #0d0b1e, #1a1535, #0d0b1e) !important;
+  border-bottom: 1px solid #c9a84c;
+  padding: 1rem 0;
+  box-shadow: 0 2px 20px rgba(201, 168, 76, 0.2);
+}
+.navbar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.made-by {
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  color: #c9a84c;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 8px rgba(201, 168, 76, 0.4);
+}
+
+.navbar-brand {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #c9a84c !important;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 10px rgba(201, 168, 76, 0.5);
+}
+
+.nav-link {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  color: #e8d5a3 !important;
+  letter-spacing: 0.08em;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem !important;
+  text-shadow: 0 0 8px rgba(201, 168, 76, 0.4);
+  font-weight: 600;
+}
+
+.nav-link:hover {
+  color: #ffd700 !important;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+}
+
+.inventory-link {
+  color: #ffd700 !important;
+}
+
+.inventory-link:hover {
+  color: #ffed4a !important;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
