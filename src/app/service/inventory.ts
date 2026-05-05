@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { API_BASE_URL } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InventoryService {
 
-  private apiUrl = 'http://localhost:8080/api/inventory';
+  private apiUrl: string = `${API_BASE_URL}/inventory`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
